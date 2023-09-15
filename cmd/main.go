@@ -1,18 +1,18 @@
 package main
 
 import (
+	"api/internal/handler"
+	"log"
 	"net/http"
-
-	inter "api/internal"
 
 	"github.com/go-chi/chi/v5"
 )
 
 func main() {
-	base := inter.NewBase()
-	handers := inter.NewBaseHandler(*base)
+
 	r := chi.NewRouter()
-	r.Get("/", handers.GetHandler)
-	r.Post("/", handers.PostHandler)
+	r.Get("/keys", handler.GetHandler)
+
+	log.Println("INFO: Server is running on port 8000")
 	http.ListenAndServe(":8000", r)
 }
