@@ -1,69 +1,42 @@
 package handler
 
 import (
-	"crypto/ecdsa"
-	"crypto/rand"
-	"errors"
 	"reflect"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
-// MockRandReader is an implementation of rand.Reader that always returns an error.
-type MockRandReader struct{}
-
-func (r MockRandReader) Read(p []byte) (n int, err error) {
-	return 0, errors.New("expected_error")
-}
-
-func TestGenerateEthereumKeysSuccess(t *testing.T) {
-	privateKey, err := generateEthereumKeys()
+func TestGenerateKeysSuccess(t *testing.T) {
+	keyReponse, err := generateECDSAKeys()
 	assert.Nil(t, err)
-	assert.NotNil(t, privateKey)
+	assert.NotNil(t, keyReponse)
+	assert.NotNil(t, keyReponse.PrivateKey)
+	assert.NotNil(t, keyReponse.PublicKey)
+
 	// Verify the type
-	assert.Equal(t, reflect.TypeOf(privateKey), reflect.TypeOf(&ecdsa.PrivateKey{}))
+	assert.Equal(t, reflect.TypeOf(keyReponse), reflect.TypeOf(&ResponseKeys{}))
 }
 
-func TestGenerateEthereumKeysError(t *testing.T) {
-	originalRandReader := rand.Reader
-
-	// Replace rand.Reader with our simulated reader
-	rand.Reader = MockRandReader{}
-
-	// Defer the restoration of rand.Reader
-	defer func() {
-		rand.Reader = originalRandReader
-	}()
-
-	// Attempt to generate the private key
-	privateKey, err := generateEthereumKeys()
-	assert.NotNil(t, err)
-	assert.Nil(t, privateKey)
-	assert.Equal(t, "expected_error", err.Error())
-
-}
-
-func TestGeneratePrivateAndPublicKeySuccess(t *testing.T) {
-	keys, err := generatePrivateAndPublicKey()
+func TestGenerateAddressSuccess(t *testing.T) {
+	keyReponse, err := generateECDSAKeys()
 	assert.Nil(t, err)
-	assert.NotNil(t, keys.PrivateKey)
-	assert.NotNil(t, keys.PublicKey)
+	assert.NotNil(t, keyReponse.PublicKey)
+
+	// Attempt to generate the address
+	responseAddress, err := generateAddress(keyReponse.PublicKey)
+	assert.Nil(t, err)
+	assert.NotNil(t, responseAddress)
+
 }
 
-func TestGeneratePrivateAndPublicKeyError(t *testing.T) {
-	originalRandReader := rand.Reader
+func TestGenerateAddressError(t *testing.T) {
+	wrongValue := "test"
+	expectedError := "can't find public key, plz create a new one"
 
-	// Replace rand.Reader with our simulated reader
-	rand.Reader = MockRandReader{}
-
-	// Defer the restoration of rand.Reader
-	defer func() {
-		rand.Reader = originalRandReader
-	}()
-
-	result, err := generatePrivateAndPublicKey()
+	responseAddress, err := generateAddress(wrongValue)
 	assert.NotNil(t, err)
-	assert.Nil(t, result)
-	assert.Equal(t, "error_generating_private_key: expected_error", err.Error())
+	assert.Equal(t, "", responseAddress)
+	assert.Equal(t, expectedError, err.Error())
+
 }

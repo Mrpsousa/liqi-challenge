@@ -48,7 +48,7 @@ func PostHandler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	post, err := GenerateAddress(data.PublicKey)
+	post, err := generateAddress(data.PublicKey)
 	if err != nil {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusInternalServerError)
@@ -92,7 +92,7 @@ func generateECDSAKeys() (*ResponseKeys, error) {
 	return &ResponseKeys{PrivateKey: hexutil.Encode(privateKeyBytes), PublicKey: pbkey}, nil
 }
 
-func GenerateAddress(pbkey string) (string, error) {
+func generateAddress(pbkey string) (string, error) {
 	// verify if exists a ecdsa Public Key by pbkey string
 	ecdsaPublicKey, exists := Cache[pbkey]
 
