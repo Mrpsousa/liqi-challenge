@@ -4,3 +4,7 @@ services:
     build: .
     ports:
       - "8000:8000"
+    environment:
+      - AWS_REGION=us-east-2
+      - AWS_ACCESS_KEY_ID=AKIAR3BZC4H5THWKDOWW
+      - AWS_SECRET_ACCESS_KEY=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

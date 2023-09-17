@@ -1,7 +1,7 @@
 package service
 
 import (
-	m "api/internal/models"
+	m "api/pkg/models"
 	"crypto/ecdsa"
 	"fmt"
 	"log"

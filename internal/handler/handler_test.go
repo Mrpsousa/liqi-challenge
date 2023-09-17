@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"api/internal/models"
+	"api/pkg/models"
 	"bytes"
 	"encoding/json"
 	"net/http"

@@ -1,7 +1,7 @@
 package handler
 
 import (
-	m "api/internal/models"
+	m "api/pkg/models"
 	svc "api/pkg/service"
 
 	"encoding/json"
