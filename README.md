@@ -1,4 +1,4 @@
-# liqi-challenge
+# Guide
 
 
 ## Running and Using Locally
